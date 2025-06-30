@@ -1,0 +1,11 @@
+services:
+  app:
+    build: .
+    env_file: .env
+    environment:
+      API_BASE_INTERNAL: http://localhost:8000
+      NEXT_PUBLIC_API_BASE: http://localhost:8000
+    ports:
+      - "3000:3000"
+      - "8000:8000"
+    restart: unless-stopped

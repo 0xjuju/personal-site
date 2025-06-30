@@ -1,0 +1,41 @@
+# Node / React / general
+node_modules
+npm-debug.log
+yarn-error.log
+.vite
+dist
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.egg-info
+*.eggs
+.venv/
+env/
+venv/
+
+# Editor / tooling
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Git
+.git
+.gitignore
+
+# Docker / Deployment
+docker-compose.override.yml
+.dockerignore
+
+# Sensitive files
+.env
+frontend/.env
+
+# Dev-only folders
+scripts/
+tests/
+alembic/versions/  # optional if you rebuild migrations in CI
