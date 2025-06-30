@@ -1,12 +1,14 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from app.core.config import get_settings
-from app.api.v1.api import api_router
-from sqladmin import Admin
-from app.core.database import engine
-from app.admin.views import *
-from starlette.middleware.sessions import SessionMiddleware
 from app.admin.auth import AdminAuth
+from app.admin.views import *
+from app.api.v1.api import api_router
+from app.core.config import get_settings
+from app.core.database import engine
+from fastapi import FastAPI
+from fastapi_limiter import FastAPILimiter
+from fastapi.middleware.cors import CORSMiddleware
+import redis.asyncio as redis
+from sqladmin import Admin
+from starlette.middleware.sessions import SessionMiddleware
 
 
 settings = get_settings()
@@ -54,5 +56,16 @@ views = [
 
 for view in views:
     admin.add_view(view)
+
+
+@app.on_event("startup")
+async def startup():
+
+    redis_conn = redis.from_url(
+        settings.redis_cloud_url, encoding="utf8", decode_responses=True
+    )
+
+    await FastAPILimiter.init(redis_conn, prefix="rl")
+
 
 

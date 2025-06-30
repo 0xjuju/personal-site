@@ -1,17 +1,17 @@
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
-
 from app.core.database import get_db
 from app.models.resume import Resume, Skill, WorkSegment
 from app.schemas.resume import ResumeOut
+from fastapi import APIRouter, Depends
+from fastapi_limiter.depends import RateLimiter
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
 
 router = APIRouter(prefix="/resume", tags=["resume"])
 
 
-@router.get("", response_model=ResumeOut)
+@router.get("", response_model=ResumeOut, dependencies=[Depends(RateLimiter(times=5, seconds=60))])
 async def read_resume(db: AsyncSession = Depends(get_db)):
 
     stmt = (

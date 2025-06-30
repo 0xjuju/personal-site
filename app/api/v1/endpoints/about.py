@@ -2,6 +2,7 @@ from app.core.database import get_db
 from app.models.about import About, Story
 from app.schemas.about import About as AboutOut
 from fastapi import APIRouter, Depends
+from fastapi_limiter.depends import RateLimiter
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
@@ -10,7 +11,7 @@ from sqlalchemy.orm import selectinload
 router = APIRouter(prefix="/about", tags=["about"])
 
 
-@router.get("", response_model=AboutOut)
+@router.get("", response_model=AboutOut, dependencies=[Depends(RateLimiter(times=10, seconds=60))])
 async def read_about(db: AsyncSession = Depends(get_db)):
     stmt = (
         select(About)

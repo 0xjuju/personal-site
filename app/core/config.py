@@ -5,7 +5,6 @@ from typing import Annotated
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-
 POSTGRES_SYNC = "postgresql+psycopg2"
 POSTGRES_ASYNC = "postgresql+asyncpg"
 
@@ -18,6 +17,8 @@ class Settings(BaseSettings):
 
     db_url_sync: str = ""
     db_url_async: str = ""
+    redis_cloud_url: str = "redis://redis:6379/0"  # Dev default
+    redi_url: str = ""
 
     def model_post_init(self, _):
         base = re.sub(r"^postgres://", "postgresql://", self.database_url, count=1)

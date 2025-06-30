@@ -1,15 +1,15 @@
-from fastapi import APIRouter, HTTPException, Request, Response
-from sqlalchemy import select
-
 from app.core.database import AsyncSessionLocal
 from app.core.security import verify_password
 from app.models.user import User
+from fastapi import APIRouter, Depends, HTTPException, Request, Response
+from fastapi_limiter.depends import RateLimiter
+from sqlalchemy import select
 
 
 router = APIRouter()
 
 
-@router.post("/login")
+@router.post("/login", dependencies=[Depends(RateLimiter(times=10, seconds=60))])
 async def login(request: Request, response: Response):
     data = await request.json()
     email = data.get("email")

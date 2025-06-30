@@ -2,6 +2,7 @@ from app.models import Info
 from app.schemas.contact import InfoOut
 from app.core.database import get_db
 from fastapi import APIRouter, Depends
+from fastapi_limiter.depends import RateLimiter
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -9,7 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 router = APIRouter(prefix="/contact", tags=["contact"])
 
 
-@router.get("", response_model=InfoOut)
+@router.get("", response_model=InfoOut, dependencies=[Depends(RateLimiter(times=10, seconds=60))])
 async def get_contact_info(db: AsyncSession = Depends(get_db)):
     stmt = select(Info).order_by(Info.order)
     result = await db.execute(stmt)
