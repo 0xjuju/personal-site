@@ -1,7 +1,7 @@
 # My Site 🏠
 
-A production-ready **portfolio & blog** stack built with **FastAPI + SQLAlchemy + PostgreSQL** on the back end and **Next.js 15, React 19, Tailwind CSS** on the front.
-Everything can run in a single Docker container, but local development remains as simple as two terminal tabs.
+A **portfolio & blog** site built with **FastAPI + SQLAlchemy + PostgreSQL** on the back end and **Next.js + React + Tailwind** on the front.
+Everything can run in a single Docker container.
 
 ---
 
@@ -10,7 +10,7 @@ Everything can run in a single Docker container, but local development remains a
 | Layer                  | Highlights                                                                                                                                                                                                                                                 |
 | ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Backend (FastAPI)**  | • REST API mounted at `/api` with typed Pydantic responses<br>• Async SQLAlchemy + PostgreSQL<br>• `sqladmin` UI at `/admin` with session-based auth<br>• CORS & session middleware already configured                                                     |
-| **Frontend (Next.js)** | • App-router architecture (`/app`)<br>• Incremental static regeneration with `REVALIDATION` constant<br>• Tailwind 4 + custom CSS variables for theming<br>• Type-safe API helpers (`apiFetch`) that auto-select the correct base URL (server vs. browser) |
+| **Frontend (Next.js)** | • App-router architecture (`/app`)<br>• Incremental static regeneration with `REVALIDATION` constant<br>• Tailwind + custom CSS variables for theming<br>• Type-safe API helpers (`apiFetch`) that auto-select the correct base URL (server vs. browser) |
 | **DevOps**             | • Multi-stage **Dockerfile** that first builds the static site, then serves **FastAPI on :8000** and **Next.js on :3000** side-by-side                                                                                                                     |
 
 ---
