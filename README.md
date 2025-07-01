@@ -1,6 +1,6 @@
 # My Site 🏠
 
-A **portfolio & blog** site built with **FastAPI + SQLAlchemy + PostgreSQL** on the back end and **Next.js + React + Tailwind** on the front.
+A **portfolio** site built with **FastAPI + SQLAlchemy + PostgreSQL** on the back end and **Next.js + React + Tailwind** on the front.
 Everything can run in a single Docker container.
 
 ---
