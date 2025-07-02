@@ -1,137 +1,69 @@
-# My Site 🏠
+# Personal Site
 
-A **portfolio** site built with **FastAPI + SQLAlchemy + PostgreSQL** on the back end and **Next.js + React + Tailwind** on the front.
-Everything can run in a single Docker container.
-
----
-
-## ✨ Key Features
-
-| Layer                  | Highlights                                                                                                                                                                                                                                                 |
-| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Backend (FastAPI)**  | • REST API mounted at `/api` with typed Pydantic responses<br>• Async SQLAlchemy + PostgreSQL<br>• `sqladmin` UI at `/admin` with session-based auth<br>• CORS & session middleware already configured                                                     |
-| **Frontend (Next.js)** | • App-router architecture (`/app`)<br>• Incremental static regeneration with `REVALIDATION` constant<br>• Tailwind + custom CSS variables for theming<br>• Type-safe API helpers (`apiFetch`) that auto-select the correct base URL (server vs. browser) |
-| **DevOps**             | • Multi-stage **Dockerfile** that first builds the static site, then serves **FastAPI on :8000** and **Next.js on :3000** side-by-side                                                                                                                     |
+This is the source code for my personal website. It's a full-stack project built using a modern JavaScript frontend and a Python backend. The site includes my portfolio, resume, and information about me.
 
 ---
 
-## 🗂️ Repository Layout
+## Overview
 
-```text
-personal-site/
-│
-├─ app/                     ← FastAPI application
-│   ├─ api/                 ← Versioned routers & endpoints
-│   │   └─ v1/endpoints/    ← about, project, resume, home, contact routes
-│   ├─ core/                ← Config, database, security, etc.
-│   ├─ models/              ← SQLAlchemy ORM models
-│   └─ admin/               ← sqladmin views & auth backend
-│
-├─ frontend/                ← Next.js 15 codebase
-│   ├─ src/app/             ← App-router pages (about, projects, etc.)
-│   ├─ src/lib/             ← API helpers & config
-│   ├─ styles/              ← Tailwind layers & global CSS
-│   └─ tailwind.config.js
-│
-├─ requirements.txt         ← Python dependencies
-├─ Dockerfile               ← Multi-stage build (see below)
-└─ README.md
-```
+* The **frontend** is built with a modern JavaScript framework and uses file-based routing. Styling is handled with utility-first CSS and some custom CSS variables for consistent theming.
+
+* The **backend** is built with Python and serves JSON data to the frontend through clean API endpoints. An admin panel is included for managing site content.
+
+* Both frontend and backend are bundled together into a single deployable container using Docker.
 
 ---
 
-## 🔌 API Overview
+## Features
 
-| Method | Path            | Description                       | Response Model |
-| ------ | --------------- | --------------------------------- | -------------- |
-| GET    | `/api/about`    | About-page hero, story & slides   | `About`        |
-| GET    | `/api/projects` | All portfolio projects            | `Project[]`    |
-| GET    | `/api/resume`   | Resume with skills & work history | `Resume`       |
-| GET    | `/api/home`     | Landing-page CTA / timeline data  | `Home`         |
-| GET    | `/api/contact`  | Contact links & metadata          | `Contact`      |
-
-All endpoints are registered in **`app/api/v1/api.py`** and mounted by `app/main.py`.
+* **Fast page loads**: Uses server-side caching (`force-cache`) to deliver content quickly.
+* **Smart content updates**: When admin users make edits (like updating a project), the frontend automatically revalidates the affected pages using custom revalidation logic.
+* **Admin dashboard**: Accessible via `/admin`, lets me update content like bio, resume, and projects without touching code.
+* **API structure**: Cleanly organized endpoints for `/about`, `/projects`, `/resume`, `/home`, and `/contact`, each backed by a database model.
 
 ---
 
-## ⚙️ Environment Variables
+## Running Locally
 
-| Variable               | Purpose                            | Example                                        |
-| ---------------------- | ---------------------------------- | ---------------------------------------------- |
-| `SECRET_KEY`           | Session & password hashing         | `mysupersecretkey`                             |
-| `DATABASE_URL`         | PostgreSQL connection string       | `postgres://user:pass@localhost:5432/personal` |
-| `API_BASE_INTERNAL`    | Backend base URL **inside** Docker | `http://backend:8000`                          |
-| `NEXT_PUBLIC_API_BASE` | Backend URL for the browser        | `http://localhost:8000`                        |
-
----
-
-## 🏃‍♂️ Local Development
-
-### 1. Back-end (port 8000)
+### Backend (Python)
 
 ```bash
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env          # then fill SECRET_KEY, DATABASE_URL, etc.
-alembic upgrade head          # create tables
+alembic upgrade head
 uvicorn app.main:app --reload --port 8000
 ```
 
-### 2. Front-end (port 3000)
+### Frontend (JavaScript)
 
 ```bash
 cd frontend
-pnpm install                  # or npm / yarn
-pnpm dev                      # hot-reload at http://localhost:3000
+pnpm install
+pnpm dev
 ```
 
-`apiFetch` automatically selects the correct base URL thanks to the environment variables above.
-
----
-
-## 🐳 One-command Docker Build
+### All Together (Docker)
 
 ```bash
-docker build -t personal-site \
-  --build-arg API_BASE_INTERNAL=http://localhost:8000 \
-  --build-arg NEXT_PUBLIC_API_BASE=http://localhost:8000 .
+docker build -t personal-site .
 docker run -p 8000:8000 -p 3000:3000 personal-site
 ```
 
-Inside the container:
+---
 
-* **FastAPI** is served by Gunicorn + Uvicorn workers on **:8000**.
-* **Next.js** runs in standalone mode on **:3000** (production build).
-* Both processes start via the shell `CMD` in the Dockerfile.
+## Admin Access
+
+Visit `/admin` to log in. This area is protected and only accessible to users marked as admins in the database.
 
 ---
 
-## 🛡️ Admin Panel
+## Deployment Notes
 
-Visit **`http://localhost:8000/admin`** and log in with a user marked `is_admin=True`.
-Authentication is handled through the lightweight `sqladmin` backend (`app/admin/auth.py`) using secure session cookies.
-
----
-
-## 📦 Deployment Notes
-
-* **Gunicorn** is production-ready; scale `--workers` by CPU count.
-* Point `DATABASE_URL` to your managed PostgreSQL instance and run migrations.
-* Use a reverse proxy (e.g., Nginx or Cloud Run) to expose only **ports 80/443** and route:
-
-  * `/api/*` → backend :8000
-  * `/*`     → next :3000 (static & SSR content)
+* Uses environment variables to configure API base URLs and database connections.
+* In production, content updates automatically trigger frontend cache revalidation.
 
 ---
 
-## 🙌 Contributing
+## License
 
-1. Fork the repo & create a feature branch.
-2. Run `pnpm lint` & `pnpm type-check` (see **package.json**).
-3. Open a pull request—include a short description & screenshots for UI work.
-
----
-
-## 📄 License
-
-Released under the **MIT License**. See [`LICENSE`](./LICENSE) for details.
+MIT
