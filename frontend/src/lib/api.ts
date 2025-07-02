@@ -1,5 +1,7 @@
-type NextFetchOpts = { revalidate?: number };
-
+type NextFetchOpts = {
+    revalidate?: number;
+    tags?: string[];
+};
 
 export async function apiFetch<T>(
     path: string,
@@ -8,16 +10,13 @@ export async function apiFetch<T>(
 
     const { nextOpts, ...fetchInit } = init;
 
-    // Base url
+    /* Base URL resolution */
     const internal = process.env.API_BASE_INTERNAL || "http://backend:8000";
     const publicBase = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000";
-
     const base = typeof window === "undefined" ? internal : publicBase;
-
-    //  Safe-join
     const url = base.replace(/\/$/, "") + (path.startsWith("/") ? path : `/${path}`);
 
-    // Run fetch
+    /* Execute fetch */
     const res = await fetch(url, {
         ...(typeof window !== "undefined" ? { credentials: "include" } : {}),
         ...fetchInit,
@@ -25,10 +24,9 @@ export async function apiFetch<T>(
             "Content-Type": "application/json",
             ...fetchInit.headers,
         },
-        next: nextOpts, // keeps Next.js revalidate / cache opts
+        next: nextOpts,            // Now accepts { revalidate, tags }
     });
 
     if (!res.ok) throw new Error(`API error ${res.status} on ${url}`);
-
     return res.json() as Promise<T>;
 }

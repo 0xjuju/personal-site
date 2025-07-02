@@ -1,10 +1,14 @@
 services:
   app:
-    build: .
-    env_file: .env
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
     environment:
       API_BASE_INTERNAL: http://localhost:8000
       NEXT_PUBLIC_API_BASE: http://localhost:8000
+      FRONTEND_INTERNAL: http://host.docker.internal:3000
     ports:
       - "3000:3000"
       - "8000:8000"

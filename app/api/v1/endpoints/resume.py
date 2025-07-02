@@ -13,7 +13,6 @@ router = APIRouter(prefix="/resume", tags=["resume"])
 
 @router.get("", response_model=ResumeOut, dependencies=[Depends(RateLimiter(times=5, seconds=60))])
 async def read_resume(db: AsyncSession = Depends(get_db)):
-
     stmt = (
         select(Resume)
         .options(

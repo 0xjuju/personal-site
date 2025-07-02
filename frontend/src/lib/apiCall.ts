@@ -8,16 +8,16 @@ import type { Project } from "@/types/project";
 import type { Resume } from "@/types/resume";
 
 
-async function apiCall<T>(path: string): Promise<T> {
+async function apiCall<T>(path: string, tag: string): Promise<T> {
     return apiFetch<T>(path, {
         cache: "force-cache",
-        nextOpts: { revalidate: REVALIDATION },
+        nextOpts: { revalidate: REVALIDATION, tags: [tag] },
     });
 }
 
 
-export const getAbout = ()    => apiCall<About>(API_ENDPOINTS.about);
-export const getProjects = () => apiCall<Project[]>(API_ENDPOINTS.projects);
-export const getResume = ()   => apiCall<Resume>(API_ENDPOINTS.resume);
-export const getHome = ()     => apiCall<Home>(API_ENDPOINTS.home);
-export const getContact = ()  => apiCall<Contact>(API_ENDPOINTS.contact);
+export const getAbout = ()    => apiCall<About>(API_ENDPOINTS.about, "about");
+export const getProjects = () => apiCall<Project[]>(API_ENDPOINTS.projects, "projects");
+export const getResume = ()   => apiCall<Resume>(API_ENDPOINTS.resume, "resume");
+export const getHome = ()     => apiCall<Home>(API_ENDPOINTS.home, "home");
+export const getContact = ()  => apiCall<Contact>(API_ENDPOINTS.contact, "contact");

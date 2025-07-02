@@ -5,8 +5,11 @@ WORKDIR /app/frontend
 
 ARG API_BASE_INTERNAL
 ARG NEXT_PUBLIC_API_BASE
+ARG FRONTEND_INTERNAL
+
 ENV API_BASE_INTERNAL=$API_BASE_INTERNAL
 ENV NEXT_PUBLIC_API_BASE=$NEXT_PUBLIC_API_BASE
+ENV FRONTEND_INTERNAL=$FRONTEND_INTERNAL
 
 RUN npm i -g pnpm
 COPY frontend/package.json frontend/pnpm-lock.* ./
@@ -20,7 +23,7 @@ WORKDIR /app
 
 # install Node for Next.js runtime
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends curl && \
+    apt-get install -y --no-install-recommends procps iproute2 curl && \
     curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
     apt-get install -y --no-install-recommends nodejs && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -43,15 +46,21 @@ COPY --from=frontend-build /app/frontend/public ./public
 # runtime env
 ARG API_BASE_INTERNAL
 ARG NEXT_PUBLIC_API_BASE
+ARG FRONTEND_INTERNAL
+
 ENV API_BASE_INTERNAL=$API_BASE_INTERNAL
 ENV NEXT_PUBLIC_API_BASE=$NEXT_PUBLIC_API_BASE
+ENV FRONTEND_INTERNAL=$FRONTEND_INTERNAL
+
+RUN echo "REVALIDATION_KEY=$REVALIDATION_KEY"
+
 ENV NODE_ENV=production
 ENV PATH="/usr/local/bin:${PATH}"
 
 EXPOSE 8000 3000
 
-CMD ["sh", "-c", "\
-  gunicorn -k uvicorn.workers.UvicornWorker -w 2 \
-           -b 0.0.0.0:8000 app.main:app & \
-  node server.js --port ${PORT:-3000} \
-"]
+COPY start.sh ./
+
+RUN chmod +x start.sh
+
+CMD ["./start.sh"]
