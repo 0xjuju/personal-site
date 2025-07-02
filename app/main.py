@@ -35,9 +35,6 @@ app.add_middleware(
 
 app.include_router(api_router, prefix=settings.api_v1_str)
 
-for route in app.routes:
-    print(f"{route.path} -> {route.name}")
-
 
 admin = Admin(app, engine, authentication_backend=AdminAuth(settings.secret_key))
 
@@ -65,7 +62,7 @@ for view in views:
 async def startup():
 
     redis_conn = redis.from_url(
-        settings.redis_cloud_url, encoding="utf8", decode_responses=True
+        settings.rediscloud_url, encoding="utf8", decode_responses=True
     )
 
     await FastAPILimiter.init(redis_conn, prefix="rl")
