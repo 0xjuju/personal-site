@@ -61,7 +61,7 @@ All endpoints are registered in **`app/api/v1/api.py`** and mounted by `app/main
 | `SECRET_KEY`           | Session & password hashing         | `mysupersecretkey`                             |
 | `DATABASE_URL`         | PostgreSQL connection string       | `postgres://user:pass@localhost:5432/personal` |
 | `API_BASE_INTERNAL`    | Backend base URL **inside** Docker | `http://backend:8000`                          |
-| `REVALIDATION_KEY`     | protect api/revalidate with secret token | `http://backend:8000`                    |
+| `REVALIDATION_KEY`     | protect api/revalidate with secret token | `anothersupersecretkey`                    |
 | `NEXT_PUBLIC_API_BASE` | Backend URL for the browser        | `http://localhost:8000`                        |
 
 ---
