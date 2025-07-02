@@ -35,6 +35,9 @@ app.add_middleware(
 
 app.include_router(api_router, prefix=settings.api_v1_str)
 
+for route in app.routes:
+    print(f"{route.path} -> {route.name}")
+
 
 admin = Admin(app, engine, authentication_backend=AdminAuth(settings.secret_key))
 

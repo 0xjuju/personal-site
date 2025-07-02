@@ -10,9 +10,9 @@ from app.models.user import User
 class AdminAuth(AuthenticationBackend):
     """
     Admin authentication
-    • authenticate() → called on every /admin request
-    • login()  → called by /admin/login POST
-    • logout() → called by /admin/logout GET
+    • authenticate() → called on every /admin-login request
+    • login()  → called by /admin-login/login POST
+    • logout() → called by /admin-login/logout GET
     """
 
     # Main gate (every request)

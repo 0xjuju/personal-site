@@ -38,4 +38,4 @@ frontend/.env
 # Dev-only folders
 scripts/
 tests/
-alembic/versions/  # optional if you rebuild migrations in CI
+alembic/versions/

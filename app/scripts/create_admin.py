@@ -45,7 +45,7 @@ async def create_or_update_admin(email: str, password: str) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Create/Update admin user")
+    parser = argparse.ArgumentParser(description="Create/Update admin-login user")
     parser.add_argument("--email", required=True, help="Admin e-mail")
     parser.add_argument("--password", required=True, help="Plain-text password")
     args = parser.parse_args()
