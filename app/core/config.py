@@ -20,6 +20,7 @@ class Settings(BaseSettings):
     db_url_async: str = ""
     rediscloud_url: str = "redis://redis:6379/0"
     redi_url: str = ""
+    debug: str
 
     frontend_internal: str = ""
 

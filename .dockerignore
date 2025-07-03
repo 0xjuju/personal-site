@@ -37,5 +37,4 @@ frontend/.env
 
 # Dev-only folders
 scripts/
-tests/
 alembic/versions/

@@ -36,6 +36,8 @@ RUN pip install --no-cache-dir --break-system-packages -r requirements.txt
 COPY app ./app
 COPY alembic alembic
 COPY alembic.ini .
+COPY tests ./tests
+COPY pytest.ini ./
 
 # copy Next.js standalone output
 COPY --from=frontend-build /app/frontend/.next/standalone ./
